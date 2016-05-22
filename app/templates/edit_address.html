@@ -1,0 +1,79 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content%}
+{{ super() }}
+
+<div class = "container">
+	{{ wtf.quick_form(form, form_type="horizontal", horizontal_columns=("xs", 3, 9), button_map={"submit":"success"}) }}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+function getArgs() {
+    var args = {};
+        var query = location.search.substring(1);
+         // Get query string
+    var pairs = query.split("&");
+                    // Break at ampersand
+     for(var i = 0; i < pairs.length; i++) {
+            var pos = pairs[i].indexOf('=');
+             // Look for "name=value"
+            if (pos == -1) continue;
+                    // If not found, skip
+                var argname = pairs[i].substring(0,pos);// Extract the name
+                var value = pairs[i].substring(pos+1);// Extract the value
+                value = decodeURIComponent(value);// Decode it, if needed
+                args[argname] = value;
+                        // Store as a property
+        }
+    return args;// Return the object
+ }
+
+$(document).ready(function()
+{
+
+	$("select").change(function()
+	{
+		var args = getArgs();
+
+		var id = args["id"];
+		var province = args["province"];
+		var city = args["city"];
+		var district = args["district"];
+
+		select_id = $(this).attr("id");
+
+		if(select_id == "province")
+		{
+			$("#district").empty();
+			$('#city').empty();
+			province = $("#province").val();
+			city = "";
+			district = "";
+		}
+		else if(select_id == "city")
+		{	
+			$("#district").empty();
+			province = $("#province").val();
+			city = $("#city").val();
+			district = "";
+		}
+		else if(select_id == "district")
+		{
+			province = $("#province").val();
+			city = $("#city").val();
+			district = $("#district").val();
+		}
+
+		location.replace("edit_address?id=" + id + 
+			"&province=" + province + 
+			"&city=" + city +
+			"&district=" + district);
+	});
+});
+
+</script>
+{% endblock %}

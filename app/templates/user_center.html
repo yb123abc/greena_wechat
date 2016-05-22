@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+{{ super() }}
+<div class="container">
+	<p>{{ user.open_id }}</p>
+	<p>{{ user.role.name }}</p>
+	<div class="panel panel-success">
+		<div class="panel-heading text-center">
+			<h3 class="panel-title">我的中心</h3>
+		</div>
+		<div class="list-group">
+			<a href="{{ url_for('mall.shopping_cart') }}" class="list-group-item">
+				<h4 class="list-group-heading"><span class="glyphicon glyphicon-shopping-cart"></span> 购物车</h4>
+			</a>
+			<a href="#" class="list-group-item">
+				<h4 class="list-group-heading"><span class="glyphicon glyphicon-list-alt"></span> 我的订单</h4>
+			</a>
+			<a href="{{ url_for('mall.address') }}" class="list-group-item">
+				<h4 class="list-group-heading"><span class="glyphicon glyphicon-home"></span> 地址管理</h4>
+			</a>
+			<a href="#" class="list-group-item">
+				<h4 class="list-group-heading"><span class="glyphicon glyphicon-gift"></span> 我的优惠</h4>
+			</a>
+			<a href="#" class="list-group-item">
+				<h4 class="list-group-heading"><span class="glyphicon glyphicon-heart"></span> 我的活动</h4>
+			</a>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

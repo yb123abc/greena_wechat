@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block page_content %} 
+{{ super() }}
+<div class="row">
+{% for product in products %}
+<div class="col-md-6 col-sm-12">
+	<a href="{{ url_for('mall.product', id=product.id) }}">
+	<img src="/static/imgs/product_show{{product.id}}.png" class="img-responsive"/>
+	<h3 class="text-success">{{ product.name }}<span class="pull-right">每份{{product.price}}元</span></h3> 
+	</a>
+	<h2><small>{{ product.description }}</small></h2>
+	<br/>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

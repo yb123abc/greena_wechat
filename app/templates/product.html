@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block page_content %}
+{{ super() }}
+<div class="container-fluid">
+	<div class="col-sx-12">
+		<br/>
+		<h1> {{ product.name }}</h1>
+		<img src="/static/imgs/product_show{{ product.id }}.png" class="img-responsive"/>
+		<br>
+		<p class="lead"> {{ product.description }} </p>
+		<br/>	
+		<p> 购买份数 :
+			<button id="btn_sub" type="button" class="btn btn-default">  -  </button>
+			<span id="product_count" class="btn btn-default"> </span>
+			<button id="btn_add" type="button" class="btn btn-default"> + </button>
+		</p>
+		<br/>
+		<div style="max-width:750px">
+			 <button id="btn_buy" type="button" class="btn btn-lg btn-success btn-block">立即购买</button>
+			 <button id="btn_add_cart" type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#modal_cart_dialog">加入购物车</button>
+		</div>
+		<div class="modal fade" id="modal_cart_dialog" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"> 温馨提示 </h4>
+					</div>
+					<div class="modal-body">
+						<p>成功添加道购物车</p>
+					</div>
+					<div class="modal-footer">
+						<button id="btn_go_mall" type="button" class="btn btn-success" data-dismiss="modal">继续点餐</button>
+						<button id="btn_go_cart" type="button" class="btn btn-success" data-dismiss="modal">确定购买</button>
+					</div>	
+				</div>
+			</div>		
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script type="text/javascript">
+	var count_value = 1;
+	var product_count = $("#product_count");
+	product_count.html(count_value);
+
+	$(":button").click(function()
+	{
+		var btn_id = $(this).attr("id");
+		if(btn_id == "btn_sub")
+		{
+			count_value = count_value <= 1 ? 1 : count_value-1;
+			product_count.html(count_value);
+		}
+		else if(btn_id == "btn_add")
+		{
+			count_value = count_value >= 999 ? 999 : count_value+1;
+			product_count.html(count_value);
+
+		}
+		else if(btn_id == "btn_buy")
+		{
+			//数据存入cookies
+			product_add_cart({{product.id}}, count_value);
+			//跳转回产品列表
+			location.href = "{{url_for('mall.shopping_cart')}}";
+		}
+		else if(btn_id == "btn_add_cart")
+		{
+			//数据存入cookies
+			product_add_cart({{product.id}}, count_value);
+
+		}
+		else if(btn_id == "btn_go_mall")
+		{
+			location.href = "{{url_for('mall.mall')}}";
+		}
+		else if(btn_id == "btn_go_cart")
+		{
+			location.href = "{{url_for('mall.shopping_cart')}}";
+		}
+		
+	});
+
+	function product_add_cart(id, value)
+	{
+		shopping_cart_cookie = $.cookie('shopping_cart');
+		if (shopping_cart_cookie == null)
+		{
+			var shopping_cart = [];
+		}
+		else
+		{
+			var shopping_cart = JSON.parse(shopping_cart_cookie);
+		}
+
+		var product_in_cart = false;
+		for (var i=0; i<shopping_cart.length; i++)
+		{
+			var obj = shopping_cart[i];
+
+			if(obj.id == id)
+			{
+				obj.count += value;
+				product_in_cart = true;
+				break;
+			}
+
+		}
+
+		if(!product_in_cart)
+		{
+			shopping_cart.push({"id":id, "count":value});
+		}
+
+		$.cookie('shopping_cart', JSON.stringify(shopping_cart), {path:'/'});
+	}
+</script>
+
+{% endblock %}

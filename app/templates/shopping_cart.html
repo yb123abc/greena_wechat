@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+{{ super() }}
+<div class="container">
+	<div class="panel panel-success">
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-shopping-cart"></span> 购物车
+		<button id="btn_clear" class="btn btn-warning btn-xs pull-right" type="button">清空购物车</button>
+	</div>
+		
+	{% if empty_cart %}
+	<div class="panel-body text-center">
+		<p>您的购物车是空的，请选择商品 ~</p>
+		<a class="btn btn-success" href="{{ url_for('mall.mall') }}">选择产品</a>
+	</div>
+	</div>
+
+	{% else %}
+	<table id="cart_table" class="table">
+		<thead>
+		<tr>
+			<th><label>产品名称</label></th>
+			<th><label>价格</label></th>
+			<th><label>数量</label></th>	
+		</tr>	
+		</thead>
+		
+		<tbody>
+		{% for product in products %}
+		<tr id="{{ product[0].id }}">
+			<td>{{ product[0].name }}</td>
+			<td>每份{{ product[0].price }}元</td>
+			<td>
+				<button id="btn_sub" type="button" class="btn btn-info btn-xs"> - </button>
+				<span class="btn btn-default btn-sm">{{ product[1] }}</span>
+				<button id="btn_add" type="button" class="btn btn-info btn-xs"> + </button>
+			</td>
+		</tr>
+		{% endfor %}
+		</tbody>	
+	</table>
+	<div id="total_sum" class="panel-footer text-right">
+		商品总价 : {{ total_sum }} 元
+	</div>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-success btn-lg" href="{{ url_for('mall.mall') }}">继续点餐</a>
+		<a class="btn btn-danger btn-lg" href="{{ url_for('mall.mall') }}">立即支付</a>
+	</div>
+	{% endif%}
+	
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+	var shopping_cart_cookies = $.cookie('shopping_cart');
+	var shopping_cart = JSON.parse(shopping_cart_cookies);
+
+	$("button").click(function()
+	{
+		var btn_id = $(this).attr('id');
+		var cookie_change = false;
+		if(btn_id == "btn_sub")
+		{
+			var product_id = parseInt($(this).parent().parent().attr('id'));
+			for (var i in shopping_cart)
+			{
+				if (product_id == shopping_cart[i].id)
+				{
+					shopping_cart[i].count--;
+					cookie_change = true;
+				}
+				if (shopping_cart[i].count <=0)
+				{
+					delete shopping_cart[i];
+					shopping_cart.splice(i, 1);
+				}
+			}
+		}
+		else if(btn_id == "btn_add")
+		{
+			var product_id = parseInt($(this).parent().parent().attr('id'));
+			for (var i in shopping_cart)
+			{
+				if (product_id == shopping_cart[i].id)
+				{
+
+					shopping_cart[i].count = shopping_cart[i].count<999 ? shopping_cart[i].count+1 : shopping_cart[i].count;
+					cookie_change = true;
+				}
+			}
+		}
+		else if(btn_id == "btn_clear")
+		{
+			shopping_cart.splice(0, shopping_cart.length);
+			cookie_change = true;
+		}
+
+		if (cookie_change)
+		{
+			$.cookie('shopping_cart', JSON.stringify(shopping_cart));
+			location.reload();
+		}
+	});
+
+</script>
+{% endblock %}
