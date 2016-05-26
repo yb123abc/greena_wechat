@@ -8,7 +8,7 @@ class User(UserMixin, db.Model):
     open_id = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     addresses = db.relationship('Address', backref='user')
-
+    address_default_id = db.Column(db.Integer)
     def __repr__(self):
         return '<User %r>' % self.open_id
 

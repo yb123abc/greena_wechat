@@ -17,6 +17,11 @@ def product(id):
 @mall.route('/shopping_cart')
 @login_required
 def shopping_cart():
+    user = current_user._get_current_object()
+    address_id = request.args.get('address_id', user.address_default_id, type=int)
+    address = Address.query.get(address_id)
+    if address and address not in user.addresses:
+        address = None
     cart_cookie = request.cookies.get('shopping_cart', None)
     products = []
     total_sum = 0
@@ -30,7 +35,7 @@ def shopping_cart():
 
     empty_cart = True if len(products)==0 else False
 
-    return render_template('shopping_cart.html', products=products, empty_cart=empty_cart, total_sum=total_sum)
+    return render_template('shopping_cart.html', products=products, empty_cart=empty_cart, total_sum=total_sum, address=address)
 
 @mall.route('/user')
 @login_required
@@ -40,14 +45,23 @@ def user_center():
 @mall.route('/address')
 @login_required
 def address():
-    id = current_user.id
-    address_list = Address.query.filter_by(user_id=id).all()
-    return render_template('address.html', address_list=address_list)
+    user = current_user._get_current_object()
+    id = user.id
+    address_default_id = user.address_default_id
+    address_list = user.addresses
+    return render_template('address.html', address_list=address_list, address_default=address_default_id)
+
+@mall.route('/select_address')
+@login_required
+def select_address():
+    user = current_user._get_current_object()
+    id = user.id
+    address_list = user.addresses
+    return render_template('select_address.html', address_list=address_list)
 
 @mall.route('/edit_address', methods=['GET', 'POST'])
 @login_required
 def edit_address():
-        
     user = current_user._get_current_object()
     if user == None:
         abort(404)  
@@ -99,9 +113,19 @@ def edit_address():
         address.phone_number = form.phone_number.data
         print address.province
         db.session.add(address)
-        return redirect(url_for('mall.address'))
+        return redirect(request.args.get('next') or url_for('mall.address'))
 
     return render_template('edit_address.html', form=form)
+
+@mall.route('/default_address')
+@login_required
+def default_address():
+    user = current_user._get_current_object()
+    address_id = request.args.get('id', -1, type=int)
+    if address_id!=-1 and Address.query.get(address_id) in user.addresses:
+        user.address_default_id = address_id
+
+    return redirect(url_for('mall.address'))
 
 @mall.route('/mall', methods=['GET', 'POST'])
 def mall():

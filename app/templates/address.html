@@ -9,24 +9,49 @@
 	</div>
 	{% endif%}
 
-	<div class="container row">
+	<div class="row">
+	{% set addr_i = 0 %}
 	{% for address in address_list %}
-	<div class="col-md-6 col-sm-12">
-		<div>
-		<address>
-			<p>{{ address.province }} {{ address.city }}  {{ address.district }}</p>
-			<p>{{ address.street}}</p>
-			<p>{{ address.reciplents }}</p>
-			<p>{{ address.zip_code }} {{ address.phone_number }}</p>
-		</address>
-		<a href="{{ url_for('mall.edit_address', id=address.id) }}" class="btn btn-success">修改地址</a>
-		<a href="#" class="btn btn-danger">删除地址</a>
+		{% set addr_i = addr_i+1 %}
+		{% if address.id == address_default %}
+			{% set address_bg = "bg-success" %}
+		{% else %}
+			{% set address_bg = "bg-default" %}
+		{% endif %}
+		<div class="col-md-6 col-sm-12 {{ address_bg }}">
+			<address>
+				<h4><strong>地址 {{ addr_i }}</strong> {%if address.id==address_default%}<span class="label label-warning"> 首选地址 </span>{% endif %}</h4>
+				{{ address.province }} {{ address.city }}  {{ address.district }}<br>
+				{{ address.street}}<br>
+				姓名 : <strong>{{ address.reciplents }}</strong><br>
+				邮政编码 : {{ address.zip_code }}<br>
+				电话 : {{ address.phone_number }}<br>
+				
+			</address>
+
+			<a href="{{ url_for('mall.edit_address', id=address.id) }}" class="btn btn-success">
+				<span class="glyphicon glyphicon-edit"></span> 修改地址
+			</a>
+			<a href="#" class="btn btn-danger">
+				<span class="glyphicon glyphicon-trash"></span> 删除地址
+			</a>
+			{% if address.id != address_default %}
+			<a href="{{ url_for('mall.default_address', id=address.id) }}" class="btn btn-default">
+				<span class="glyphicon glyphicon-map-marker"></span>设为默认地址
+			</a>
+			{% endif %}
+			<p></p>
 		</div>
+
+	{% endfor %}
 	</div>
-	{% endfor%}
+	<br>
+	<div class="container">
+		<a href="{{ url_for('mall.edit_address') }}" class="btn btn-info">
+			<span class="glyphicon glyphicon-plus"></span> 添加新地址
+		</a>
 	</div>
-	<br/>
-	<a href="{{ url_for('mall.edit_address') }}" class="btn btn-info btn-lg">添加新地址</a>
+	
 </div>
 
 {% endblock %}

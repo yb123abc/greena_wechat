@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block page_content %}
+{{ super() }}
+
+<div class="container">
+	<div class="row">
+	{% set addr_i = 0 %}
+	{% for address in address_list %}
+		{% set addr_i = addr_i + 1 %}
+		<div class="col-md-6 col-sm-12 ">
+			<address>
+				<h4><strong>地址 {{ addr_i }}</strong></h4>
+				{{ address.province }} {{ address.city }}  {{ address.district }}<br>
+				{{ address.street}}<br>
+				姓名 : <strong>{{ address.reciplents }}</strong><br>
+				邮政编码 : {{ address.zip_code }}<br>
+				电话 : {{ address.phone_number }}<br>			
+			</address>
+			<a href="{{ url_for('mall.shopping_cart', address_id=address.id) }}" class="btn btn-primary">
+				<span class="glyphicon glyphicon-map-marker"></span>选择地址
+			</a>
+			<p></p>
+		</div>
+	{% endfor %}
+	</div>
+	<br>
+	<div class="container">
+		<a href="{{ url_for('mall.address') }}" class="btn btn-success btn-lg">
+			前往管理地址
+		</a>
+	</div>
+</div>
+
+{% endblock %}
