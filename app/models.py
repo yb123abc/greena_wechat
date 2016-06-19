@@ -8,6 +8,7 @@ class User(UserMixin, db.Model):
     open_id = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     addresses = db.relationship('Address', backref='user')
+    orders = db.relationship('Order', backref='user')
     address_default_id = db.Column(db.Integer)
     def __repr__(self):
         return '<User %r>' % self.open_id
@@ -66,6 +67,37 @@ class District(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     city_id = db.Column(db.Integer, db.ForeignKey('citys.id'))
     name = db.Column(db.String(64), nullable=False)
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    order_products = db.relationship('OrderProduct', backref='order', lazy='dynamic')
+    #address info
+    province = db.Column(db.String(64), nullable=False)
+    city = db.Column(db.String(64), nullable=False)
+    district = db.Column(db.String(64), nullable=False)
+    street = db.Column(db.String(128), nullable=False)
+    zip_code = db.Column(db.String(64), nullable=False)
+    reciplents = db.Column(db.String(64), nullable=False)
+    phone_number = db.Column(db.String(64), nullable=False)
+    #order comment
+    comment = db.Column(db.Text)
+    #deliver time
+    order_time = db.Column(db.DateTime)
+    deliver_date = db.Column(db.Date)
+    deliver_time = db.Column(db.Integer, default=0)
+    #order status
+    order_status = db.Column(db.Integer, default=0)
+    shipping_status = db.Column(db.Integer, default=0)
+    pay_status = db.Column(db.Integer, default=0)
+
+class OrderProduct(db.Model):
+    __tablename__ = 'order_products'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+    count = db.Column(db.Integer, default=0)
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -19,9 +19,14 @@ def product(id):
 def shopping_cart():
     user = current_user._get_current_object()
     address_id = request.args.get('address_id', user.address_default_id, type=int)
+    print 'user default address id:' 
+    print user.address_default_id
     address = Address.query.get(address_id)
+        
     if address and address not in user.addresses:
         address = None
+        print 'Yes'
+
     cart_cookie = request.cookies.get('shopping_cart', None)
     products = []
     total_sum = 0
@@ -126,6 +131,22 @@ def default_address():
         user.address_default_id = address_id
 
     return redirect(url_for('mall.address'))
+
+@mall.route('/delete_address/<int:id>')
+@login_required
+def delete_address(id):
+    user = current_user._get_current_object()
+    address = Address.query.get(id)
+    if address in user.addresses:
+        if user.address_default_id==address.id:
+            user.address_default_id = -1
+        db.session.delete(address)
+    return redirect(url_for('mall.address'))
+
+# @mall.route('add_order')
+#@login_required
+#def add_order():
+#     pass
 
 @mall.route('/mall', methods=['GET', 'POST'])
 def mall():

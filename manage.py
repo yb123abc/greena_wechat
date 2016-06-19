@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import os
 from app import create_app, db
-from app.models import Role, User, Product, ProductType, Province, City, District
+from app.models import *
+#from app.models import Role, User, Product, ProductType, Province, City, District
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 import data_add
