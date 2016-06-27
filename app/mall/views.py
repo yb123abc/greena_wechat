@@ -3,10 +3,12 @@ from flask import render_template,request, url_for, redirect
 from flask.ext.login import login_required, current_user
 from . import mall
 from .. import db
-from ..models import Product, Address, Province, City, District
+from ..models import Product, Address, Province, City, District, Order, OrderProduct
 from forms import AddressForm
 import json
 import urllib
+import datetime
+from .. import greena_lib
 
 @mall.route('/product/<int:id>')
 @login_required
@@ -19,13 +21,10 @@ def product(id):
 def shopping_cart():
     user = current_user._get_current_object()
     address_id = request.args.get('address_id', user.address_default_id, type=int)
-    print 'user default address id:' 
-    print user.address_default_id
     address = Address.query.get(address_id)
         
     if address and address not in user.addresses:
         address = None
-        print 'Yes'
 
     cart_cookie = request.cookies.get('shopping_cart', None)
     products = []
@@ -143,10 +142,65 @@ def delete_address(id):
         db.session.delete(address)
     return redirect(url_for('mall.address'))
 
-# @mall.route('add_order')
-#@login_required
-#def add_order():
-#     pass
+@mall.route('/add_order', methods=['GET', 'POST'])
+@login_required
+def add_order():
+    print request.method
+    if request.method=='POST':
+        deliver_date_info = request.form['deliver_date'].split('-')
+        deliver_time = request.form['deliver_time']
+        address_id = request.form['address']
+        comment = request.form['comment']
+        print deliver_time
+        print address_id
+        print comment
+ 
+        cart_cookie = request.cookies.get('shopping_cart', None)
+        total_sum = 0
+        address = Address.query.get_or_404(address_id)
+        new_order = greena_lib.create_order()
+
+        user = current_user._get_current_object()
+        new_order.user_id = user.id
+        db.session.add(new_order)
+        new_order.deliver_date = datetime.date(int(deliver_date_info[0]),int(deliver_date_info[1]),int(deliver_date_info[2]))
+        new_order.deliver_time = deliver_time
+        new_order.order_datetime = datetime.datetime.now() 
+        new_order.comment = comment
+        new_order.province = address.province
+        new_order.city = address.city
+        new_order.district = address.district
+        new_order.street = address.street
+        new_order.zip_code = address.zip_code
+        new_order.reciplents = address.reciplents
+        new_order.phone_number = address.phone_number
+        db.session.add(new_order)
+
+        if cart_cookie:
+            cart_cookie = urllib.unquote(cart_cookie)
+            shopping_cart = json.loads(cart_cookie)
+            for cart_row in shopping_cart:
+                product = Product.query.get_or_404(cart_row['id'])
+                order_product = OrderProduct()
+                order_product.order_id = new_order.order_id
+                order_product.product_id = product.id
+                order_product.count = cart_row['count']
+                total_sum += product.price * cart_row['count']
+
+                db.session.add(order_product)
+
+            new_order.total_sum = total_sum
+
+        return redirect(url_for('mall.order_info', id=new_order.id))
+    else:
+        return redirect(url_for('mall.mall'))
+
+@mall.route('/order_info/<int:id>')
+@login_required
+def order_info(id):
+    order = Order.query.get_or_404(id)
+    return render_template('order_info.html', order=order)
+
 
 @mall.route('/mall', methods=['GET', 'POST'])
 def mall():

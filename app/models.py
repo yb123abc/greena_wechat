@@ -29,6 +29,7 @@ class Product(db.Model):
     name = db.Column(db.String(64), unique=True)
     price = db.Column(db.Float)
     description = db.Column(db.Text)
+    order_products = db.relationship('OrderProduct', backref='product', lazy='dynamic')
 
 class ProductType(db.Model):
     __tablename__='product_type'
@@ -71,8 +72,10 @@ class District(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.String(64), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     order_products = db.relationship('OrderProduct', backref='order', lazy='dynamic')
+    total_sum = db.Column(db.Float, nullable=False, default=0)
     #address info
     province = db.Column(db.String(64), nullable=False)
     city = db.Column(db.String(64), nullable=False)
@@ -84,7 +87,7 @@ class Order(db.Model):
     #order comment
     comment = db.Column(db.Text)
     #deliver time
-    order_time = db.Column(db.DateTime)
+    order_datetime = db.Column(db.DateTime)
     deliver_date = db.Column(db.Date)
     deliver_time = db.Column(db.Integer, default=0)
     #order status
@@ -95,7 +98,7 @@ class Order(db.Model):
 class OrderProduct(db.Model):
     __tablename__ = 'order_products'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
+    order_id = db.Column(db.String(64), db.ForeignKey('orders.order_id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     count = db.Column(db.Integer, default=0)
 

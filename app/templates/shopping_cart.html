@@ -9,6 +9,31 @@
 {{ super() }}
 <div class="container">
 
+	<div class="panel panel-success">
+		<div class="panel-heading">
+			收货地址
+		</div>
+		
+		{% if not address %}
+		<div class="panel-body text-center">
+			<p>请选择送餐地址 ~</p>
+		</div>
+		{% else %}
+		<div class="panel-body">
+			<address>
+				{{ address.province }} {{ address.city }}  {{ address.district }}<br>
+				{{ address.street}} <br>
+				电话:{{ address.phone_number }} 邮编:{{ address.zip_code }}<br>
+				收件人:<strong>{{ address.reciplents }}</strong>
+			</address>
+		</div>
+		{% endif %}
+		<div class="panel-footer">
+			<a class="btn btn-success" href="{{ url_for('mall.select_address') }}">选择送餐地址</a>
+		</div>
+
+	</div>
+
 	<div class="panel-success">
 	<div class="panel-heading">
 		<span class="glyphicon glyphicon-shopping-cart"></span> 购物车
@@ -52,55 +77,33 @@
 	</div>
 	{%endif%}
 
+	<form action="{{ url_for('mall.add_order')}}" method="POST" id="add_order">
+
 	<br/>
-	<div class="panel-success">
-		<div class="panel-heading">送餐时间 :</div>
-		<div class="panel-body">
-			<div id="deliver_date" class="input-group date form_date" data-date="" data-date-format="yyyy MM dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" size="16" type="text" value="" readonly>
-					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                </div>
-				<input type="hidden" id="dtp_input2" value="" /><br/>
+			<label>送餐日期 : </label>
+           	<input name ="deliver_date" id="deliver_date" class="date form_date form-control" size="16" type="text" readonly></input>
+			<label>送餐时间 : </label>
 			<select name="deliver_time" class="form-control selectpicker" >
-				<option id="0">上午 9:00 － 11:30</option>
-				<option id="1">中午 11:30 － 12:30</option>
-				<option id="2">下午 13:00 - 16:00</option>
-				<option id="3">傍晚 16:00 - 18:00</option>
+				<option id="0" value="0">上午 9:00 － 11:30</option>
+				<option id="1" value="1">中午 11:30 － 12:30</option>
+				<option id="2" value="2">下午 13:00 - 16:00</option>
+				<option id="3" value="3">傍晚 16:00 - 18:00</option>
 			</select>
-		</div>
-	</div>
 	<br/>
 
-	<div class="panel panel-success">
-		<div class="panel-heading">
-			收货地址
-		</div>
-		
-		{% if not address %}
-		<div class="panel-body text-center">
-			<p>请选择送餐地址 ~</p>
-		</div>
-		{% else %}
-		<div class="panel-body">
-			<address>
-				{{ address.province }} {{ address.city }}  {{ address.district }}<br>
-				{{ address.street}} <br>
-				电话:{{ address.phone_number }} 邮编:{{ address.zip_code }}<br>
-				收件人:<strong>{{ address.reciplents }}</strong>
-			</address>
-		</div>
-		{% endif %}
-		<div class="panel-footer">
-			<a class="btn btn-success" href="{{ url_for('mall.select_address') }}">选择送餐地址</a>
-		</div>
+	<label>备注(不多于500字) : </label>
+	<textarea type="text" class="form-control" name="comment"></textarea>
+	<br/>
 
-	</div>
+	<input type="hidden" name="address" value={{address.id}}></input>
+		
+	</form>
 
 	{% if not empty_cart and address %}
 	<br/>
 	<div class="text-center">
 		<a class="btn btn-success btn-lg" href="{{ url_for('mall.mall') }}">继续点餐</a>
-		<a class="btn btn-danger btn-lg" href="{{ url_for('mall.mall') }}">立即支付</a>
+		<a class="btn btn-danger btn-lg" href="javascript:$('#add_order').submit()">提交订单</a>
 	</div>
 	{% endif%}
 	
@@ -116,16 +119,26 @@
 	var shopping_cart = JSON.parse(shopping_cart_cookies);
 
 	$(function() {
-		$('#deliver_date').datetimepicker({
-			language: 'zh-CN',
+		var date = new Date();
+		date.setDate(date.getDate() + 1);
+		var startDate = date.toLocaleDateString();
+		date.setDate(date.getDate() + 7);
+		var endDate = date.toLocaleDateString();
+		$("#deliver_date").datetimepicker({
+			language: "zh-CN",
+			format: "yyyy-mm-dd",
 	        weekStart: 1,
 	        todayBtn:  1,
 			autoclose: 1,
 			todayHighlight: 1,
 			startView: 2,
 			minView: 2,
-			forceParse: 0
+			forceParse: 0,
+			initialDate: startDate,
 		});
+		$("#deliver_date").datetimepicker("setStartDate", startDate);
+		$("#deliver_date").datetimepicker("setEndDate", endDate);
+
 	});
 
 	$("button").click(function()
