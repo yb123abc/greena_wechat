@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap-datetimepicker.min.css')}}">
+{% endblock %}
+
 {% block page_content %}
 {{ super() }}
 <div class="container">
+
 	<div class="panel panel-success">
 		<div class="panel-heading">
 			收货地址
 		</div>
 		
-		{% if address == null %}
+		{% if not address %}
 		<div class="panel-body text-center">
 			<p>请选择送餐地址 ~</p>
 		</div>
@@ -28,7 +34,7 @@
 
 	</div>
 
-	<div class="panel panel-success">
+	<div class="panel-success">
 	<div class="panel-heading">
 		<span class="glyphicon glyphicon-shopping-cart"></span> 购物车
 		<button id="btn_clear" class="btn btn-warning btn-xs pull-right" type="button">清空购物车</button>
@@ -69,9 +75,35 @@
 		商品总价 : {{ total_sum }} 元
 	</div>
 	</div>
+	{%endif%}
+
+	<form action="{{ url_for('mall.add_order')}}" method="POST" id="add_order">
+
+	<br/>
+			<label>送餐日期 : </label>
+           	<input name ="deliver_date" id="deliver_date" class="date form_date form-control" size="16" type="text" readonly></input>
+			<label>送餐时间 : </label>
+			<select name="deliver_time" class="form-control selectpicker" >
+				<option id="0" value="0">上午 9:00 － 11:30</option>
+				<option id="1" value="1">中午 11:30 － 12:30</option>
+				<option id="2" value="2">下午 13:00 - 16:00</option>
+				<option id="3" value="3">傍晚 16:00 - 18:00</option>
+			</select>
+	<br/>
+
+	<label>备注(不多于500字) : </label>
+	<textarea type="text" class="form-control" name="comment"></textarea>
+	<br/>
+
+	<input type="hidden" name="address" value={{address.id}}></input>
+		
+	</form>
+
+	{% if not empty_cart and address %}
+	<br/>
 	<div class="text-center">
 		<a class="btn btn-success btn-lg" href="{{ url_for('mall.mall') }}">继续点餐</a>
-		<a class="btn btn-danger btn-lg" href="{{ url_for('mall.mall') }}">立即支付</a>
+		<a class="btn btn-danger btn-lg" href="javascript:$('#add_order').submit()">提交订单</a>
 	</div>
 	{% endif%}
 	
@@ -80,9 +112,34 @@
 
 {% block scripts %}
 {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
 <script type="text/javascript">
 	var shopping_cart_cookies = $.cookie('shopping_cart');
 	var shopping_cart = JSON.parse(shopping_cart_cookies);
+
+	$(function() {
+		var date = new Date();
+		date.setDate(date.getDate() + 1);
+		var startDate = date.toLocaleDateString();
+		date.setDate(date.getDate() + 7);
+		var endDate = date.toLocaleDateString();
+		$("#deliver_date").datetimepicker({
+			language: "zh-CN",
+			format: "yyyy-mm-dd",
+	        weekStart: 1,
+	        todayBtn:  1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startView: 2,
+			minView: 2,
+			forceParse: 0,
+			initialDate: startDate,
+		});
+		$("#deliver_date").datetimepicker("setStartDate", startDate);
+		$("#deliver_date").datetimepicker("setEndDate", endDate);
+
+	});
 
 	$("button").click(function()
 	{
