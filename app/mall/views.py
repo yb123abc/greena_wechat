@@ -3,7 +3,7 @@ from flask import render_template,request, url_for, redirect
 from flask.ext.login import login_required, current_user
 from . import mall
 from .. import db
-from ..models import Product, Address, Province, City, District, Order, OrderProduct
+from ..models import Product, ProductType, Address, Province, City, District, Order, OrderProduct
 from forms import AddressForm
 import json
 import urllib
@@ -212,16 +212,9 @@ def order_info(id):
 def home():
     return render_template('home.html')
 
-@mall.route('/sports_foods')
-def sports_foods():
-    return render_template('sports_foods.html')
-
-@mall.route('/healthy_foods')
-def healthy_foods():
-    return render_template('healthy_foods.html')
-    
-@mall.route('/mall', methods=['GET', 'POST'])
-def mall():
-    products = Product.query.all()
+@mall.route('/mall/<string:product_type>')
+def mall(product_type):
+    product_type = ProductType.query.filter_by(name=product_type).first_or_404()
+    products = product_type.products
     return render_template('mall.html', products=products)
 

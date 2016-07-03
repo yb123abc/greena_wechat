@@ -3,13 +3,13 @@
 {{ super() }}
 <div class="row">
 	<div class="col-md-6 col-sm-12">
-		<a href="{{ url_for('mall.sports_foods') }}">
+		<a href="{{ url_for('mall.mall', product_type='运动系列') }}">
 		<img src="/static/imgs/sports.jpg" class="img-responsive"/>
 		</a>
 		<br/>
 	</div>
 	<div class="col-md-6 col-sm-12">
-		<a href="{{ url_for('mall.healthy_foods') }}">
+		<a href="{{ url_for('mall.mall', product_type='健康系列') }}">
 		<img src="/static/imgs/healthy.jpg" class="img-responsive"/>
 		</a>
 		<br/>

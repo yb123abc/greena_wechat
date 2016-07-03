@@ -113,7 +113,7 @@ class OrderProduct(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
     count = db.Column(db.Integer, default=0)
     def __repr__(self):
-        return '<OrderProduct %s_%s>' % (self.order_id, product_id)
+        return '<OrderProduct %s_%s>' % (self.order_id, self.product_id)
 
 
 @login_manager.user_loader

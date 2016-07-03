@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% block page_content %}
-{{ super() }}
 <div class="container-fluid">
 	<div class="col-sx-12">
+		<!-- <h1> {{ product.name }}</h1> -->
+		<img class="img-responsive" src="{{ url_for('static', filename='imgs/head_'+ product.type.name +'.jpg') }}"/>
 		<br/>
-		<h1> {{ product.name }}</h1>
-		<img src="/static/imgs/product_show{{ product.id }}.png" class="img-responsive"/>
-		<br>
-		<p class="lead"> {{ product.description }} </p>
+		<img src="/static/imgs/product_desc_{{ product.name }}.jpg" class="img-responsive"/>
+		<!-- <p class="lead"> {{ product.description }} </p> -->
 		<br/>	
 		<p> 购买份数 :
 			<button id="btn_sub" type="button" class="btn btn-default">  -  </button>
@@ -76,7 +75,7 @@
 		}
 		else if(btn_id == "btn_go_mall")
 		{
-			location.href = "{{url_for('mall.mall')}}";
+			location.href = "{{url_for('mall.home')}}";
 		}
 		else if(btn_id == "btn_go_cart")
 		{
