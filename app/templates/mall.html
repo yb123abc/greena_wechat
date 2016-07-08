@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block page_content %} 
-{{ super() }}
+<br/>
 <div class="row">
 {% for product in products %}
 <div class="col-md-6 col-sm-12">
 	<a href="{{ url_for('mall.product', id=product.id) }}">
-	<img src="/static/imgs/product_show_{{product.name}}.jpg" class="img-responsive"/>
-	<h3 class="text-success">{{ product.name }}<span class="pull-right">每份{{product.price}}元</span></h3> 
+	<img src="/static/imgs/product_show_{{product.name}}.jpg" class="img-responsive"/> 
 	</a>
-	<h2><small>{{ product.description }}</small></h2>
+	<p class="lead text-muted" >{{ product.name }}<span class="pull-right">每份{{product.price}}元</span></p>
+	<!-- <h2><small>{{ product.description }}</small></h2> -->
 	<br/>
 </div>
 {% endfor %}

@@ -3437,6 +3437,72 @@ fieldset[disabled] .btn-danger.active {
   color: #d9534f;
   background-color: #fff;
 }
+.btn-greena {
+  color: #fff;
+  background-color: #555555;
+  border-color: #494949;
+}
+.btn-greena:focus,
+.btn-greena.focus {
+  color: #fff;
+  background-color: #3c3c3c;
+  border-color: #090909;
+}
+.btn-greena:hover {
+  color: #fff;
+  background-color: #3c3c3c;
+  border-color: #2a2a2a;
+}
+.btn-greena:active,
+.btn-greena.active,
+.open > .dropdown-toggle.btn-greena {
+  color: #fff;
+  background-color: #3c3c3c;
+  border-color: #2a2a2a;
+}
+.btn-greena:active:hover,
+.btn-greena.active:hover,
+.open > .dropdown-toggle.btn-greena:hover,
+.btn-greena:active:focus,
+.btn-greena.active:focus,
+.open > .dropdown-toggle.btn-greena:focus,
+.btn-greena:active.focus,
+.btn-greena.active.focus,
+.open > .dropdown-toggle.btn-greena.focus {
+  color: #fff;
+  background-color: #2a2a2a;
+  border-color: #090909;
+}
+.btn-greena:active,
+.btn-greena.active,
+.open > .dropdown-toggle.btn-greena {
+  background-image: none;
+}
+.btn-greena.disabled,
+.btn-greena[disabled],
+fieldset[disabled] .btn-greena,
+.btn-greena.disabled:hover,
+.btn-greena[disabled]:hover,
+fieldset[disabled] .btn-greena:hover,
+.btn-greena.disabled:focus,
+.btn-greena[disabled]:focus,
+fieldset[disabled] .btn-greena:focus,
+.btn-greena.disabled.focus,
+.btn-greena[disabled].focus,
+fieldset[disabled] .btn-greena.focus,
+.btn-greena.disabled:active,
+.btn-greena[disabled]:active,
+fieldset[disabled] .btn-greena:active,
+.btn-greena.disabled.active,
+.btn-greena[disabled].active,
+fieldset[disabled] .btn-greena.active {
+  background-color: #555555;
+  border-color: #494949;
+}
+.btn-greena .badge {
+  color: #555555;
+  background-color: #fff;
+}
 .btn-link {
   color: #337ab7;
   font-weight: normal;
@@ -5808,6 +5874,24 @@ button.list-group-item-danger.active:focus {
 .panel-danger > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #ebccd1;
 }
+.panel-greena {
+  border-color: #494949;
+}
+.panel-greena > .panel-heading {
+  color: #fff;
+  background-color: #555555;
+  border-color: #494949;
+}
+.panel-greena > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #494949;
+}
+.panel-greena > .panel-heading .badge {
+  color: #555555;
+  background-color: #fff;
+}
+.panel-greena > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #494949;
+}
 .embed-responsive {
   position: relative;
   display: block;
@@ -6781,7 +6865,7 @@ ul.fmenu > li > a {
   font-size: 18px;
   line-height: 40px;
   color: #337ab7;
-  margin: 5px 5px 5px 5px;
+  margin: 5px 15px 5px 15px;
 }
 ul.fmenu > li > a:howver {
   text-decoration: none;

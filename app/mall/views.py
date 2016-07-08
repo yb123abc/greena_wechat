@@ -38,8 +38,9 @@ def shopping_cart():
             total_sum += product.price * cart_row['count']
 
     empty_cart = True if len(products)==0 else False
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
 
-    return render_template('shopping_cart.html', products=products, empty_cart=empty_cart, total_sum=total_sum, address=address)
+    return render_template('shopping_cart.html', products=products, empty_cart=empty_cart, total_sum=total_sum, address=address, tomorrow=tomorrow)
 
 @mall.route('/user')
 @login_required
@@ -148,6 +149,7 @@ def add_order():
     print request.method
     if request.method=='POST':
         deliver_date_info = request.form['deliver_date'].split('-')
+        print deliver_date_info
         deliver_time = request.form['deliver_time']
         address_id = request.form['address']
         comment = request.form['comment']

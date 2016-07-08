@@ -29,12 +29,14 @@
 				
 			</address>
 
-			<a href="{{ url_for('mall.edit_address', id=address.id) }}" class="btn btn-success">
+			<p>
+			<a href="{{ url_for('mall.edit_address', id=address.id) }}" class="btn btn-default">
 				<span class="glyphicon glyphicon-edit"></span> 修改地址
 			</a>
 			<a href="{{ url_for('mall.delete_address', id=address.id) }}" class="btn btn-danger">
 				<span class="glyphicon glyphicon-trash"></span> 删除地址
 			</a>
+			</p>
 			{% if address.id != address_default %}
 			<a href="{{ url_for('mall.default_address', id=address.id) }}" class="btn btn-default">
 				<span class="glyphicon glyphicon-map-marker"></span>设为默认地址
@@ -46,11 +48,11 @@
 	{% endfor %}
 	</div>
 	<br>
-	<div class="container">
+<!-- 	<div class="container"> -->
 		<a href="{{ url_for('mall.edit_address') }}" class="btn btn-info">
 			<span class="glyphicon glyphicon-plus"></span> 添加新地址
 		</a>
-	</div>
+	<!-- </div> -->
 	
 </div>
 

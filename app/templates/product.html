@@ -2,7 +2,7 @@
 {% block page_content %}
 <div class="container-fluid">
 	<div class="col-sx-12">
-		<!-- <h1> {{ product.name }}</h1> -->
+		<br/>
 		<img class="img-responsive" src="{{ url_for('static', filename='imgs/head_'+ product.type.name +'.jpg') }}"/>
 		<br/>
 		<img src="/static/imgs/product_desc_{{ product.name }}.jpg" class="img-responsive"/>
@@ -15,8 +15,8 @@
 		</p>
 		<br/>
 		<div style="max-width:750px">
-			 <button id="btn_buy" type="button" class="btn btn-lg btn-success btn-block">立即购买</button>
-			 <button id="btn_add_cart" type="button" class="btn btn-lg btn-success btn-block" data-toggle="modal" data-target="#modal_cart_dialog">加入购物车</button>
+			 <button id="btn_buy" type="button" class="btn btn-lg btn-greena btn-block">立即购买</button>
+			 <button id="btn_add_cart" type="button" class="btn btn-lg btn-greena btn-block" data-toggle="modal" data-target="#modal_cart_dialog">加入购物车</button>
 		</div>
 		<div class="modal fade" id="modal_cart_dialog" role="dialog">
 			<div class="modal-dialog" role="document">
@@ -28,8 +28,8 @@
 						<p>成功添加道购物车</p>
 					</div>
 					<div class="modal-footer">
-						<button id="btn_go_mall" type="button" class="btn btn-success" data-dismiss="modal">继续点餐</button>
-						<button id="btn_go_cart" type="button" class="btn btn-success" data-dismiss="modal">确定购买</button>
+						<button id="btn_go_mall" type="button" class="btn btn-greena" data-dismiss="modal">继续点餐</button>
+						<button id="btn_go_cart" type="button" class="btn btn-greena" data-dismiss="modal">确定购买</button>
 					</div>	
 				</div>
 			</div>		
