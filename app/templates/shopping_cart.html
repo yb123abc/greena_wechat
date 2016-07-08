@@ -43,7 +43,7 @@
 	{% if empty_cart %}
 	<div class="panel-body text-center">
 		<p>您的购物车是空的，请选择商品 ~</p>
-		<a class="btn btn-success" href="{{ url_for('mall.home') }}">选择产品</a>
+		<a class="btn btn-greena" href="{{ url_for('mall.home') }}">选择产品</a>
 	</div>
 	</div>
 
@@ -116,7 +116,12 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/locales/bootstrap-datetimepicker.zh-CN.js') }}"></script>
 <script type="text/javascript">
 	var shopping_cart_cookies = $.cookie('shopping_cart');
-	var shopping_cart = JSON.parse(shopping_cart_cookies);
+
+	if (shopping_cart_cookies)
+	{
+		var shopping_cart = JSON.parse(shopping_cart_cookies);
+	}
+	
 
 	$(function() {
 		var date = new Date();
@@ -127,6 +132,8 @@
 		$("#deliver_date").datetimepicker({
 			language: "zh-CN",
 			format: "yyyy-mm-dd",
+			startDate: startDate,
+			endDate: endDate,
 	        weekStart: 1,
 	        todayBtn:  1,
 			autoclose: 1,
@@ -136,8 +143,8 @@
 			forceParse: 0,
 			initialDate: startDate,
 		});
-		$("#deliver_date").datetimepicker("setStartDate", startDate);
-		$("#deliver_date").datetimepicker("setEndDate", endDate);
+		// $("#deliver_date").datetimepicker("setStartDate", startDate);
+		// $("#deliver_date").datetimepicker("setEndDate", endDate);
 
 	});
 
